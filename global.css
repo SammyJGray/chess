@@ -1,0 +1,37 @@
+body {
+	background-image: url('images/background.jpg');
+	background-size: cover;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+
+.container {
+	display: flex;
+	gap: 20px;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.box {
+	background-color: black;
+}
+
+#board {
+	width: 80vmin;
+	height: 80vmin;
+}
+
+#info {
+	width: 70vmin;
+	height: 90vmin;
+}
+
+@media (max-width: 768px) {
+	.container {
+		flex-direction: column;
+	}
+}
