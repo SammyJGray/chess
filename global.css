@@ -38,10 +38,16 @@ body {
 	justify-content: center;
 }
 
-#board img {
+.chess-piece {
 	width: 75%;
 	max-height: 75%;
 	object-fit: contain;
+
+	transition: transform 0.3s ease;
+}
+
+.chess-piece:hover {
+	transform: scale(0.7);
 }
 
 #info {

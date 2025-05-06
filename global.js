@@ -41,6 +41,7 @@ function renderBitboard(bitBoard, imageSrc){
 				let tile = getTile(row,col);
 				let piece = document.createElement('img');
 				piece.src = imageSrc;
+				piece.classList.add("chess-piece");
 				tile.appendChild(piece);
 			}
 		}
