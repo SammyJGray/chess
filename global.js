@@ -14,8 +14,53 @@ function getTile(row,col){
 	return document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
 }
 
-const tile = getTile(1,4);
-const piece = document.createElement('img');
-piece.src = 'assets/sprites/black-queen.svg';
-tile.appendChild(piece);
+const bitBoards = {
+    white: {
+        pawns:   0x000000000000FF00n,
+        rooks:   0x0000000000000081n,
+        knights: 0x0000000000000042n,
+        bishops: 0x0000000000000024n,
+        queen:   0x0000000000000008n,
+        king:    0x0000000000000010n
+    },
+    black: {
+        pawns:   0x00FF000000000000n,
+        rooks:   0x8100000000000000n,
+        knights: 0x4200000000000000n,
+        bishops: 0x2400000000000000n,
+        queen:   0x0800000000000000n,
+        king:    0x1000000000000000n
+    }
+};
 
+function renderBitboard(bitBoard, imageSrc){
+	for (let row = 0n; row < 8n; row++){
+		for (let col = 0n; col < 8n; col++){
+			let index = (8n*(7n-row) + col)
+			if ((bitBoard >> index) & 1n){
+				let tile = getTile(row,col);
+				let piece = document.createElement('img');
+				piece.src = imageSrc;
+				tile.appendChild(piece);
+			}
+		}
+	}
+}	
+
+renderBitboard(bitBoards.white.pawns,"assets/sprites/white-pawn.svg");
+renderBitboard(bitBoards.black.pawns,"assets/sprites/black-pawn.svg");
+
+renderBitboard(bitBoards.white.rooks,"assets/sprites/white-rook.svg");
+renderBitboard(bitBoards.black.rooks,"assets/sprites/black-rook.svg");
+
+renderBitboard(bitBoards.white.knights,"assets/sprites/white-knight.svg");
+renderBitboard(bitBoards.black.knights,"assets/sprites/black-knight.svg");
+
+renderBitboard(bitBoards.white.bishops,"assets/sprites/white-bishop.svg");
+renderBitboard(bitBoards.black.bishops,"assets/sprites/black-bishop.svg");
+
+renderBitboard(bitBoards.white.queen,"assets/sprites/white-queen.svg");
+renderBitboard(bitBoards.black.queen,"assets/sprites/black-queen.svg");
+
+renderBitboard(bitBoards.white.king,"assets/sprites/white-king.svg");
+renderBitboard(bitBoards.black.king,"assets/sprites/black-king.svg");
