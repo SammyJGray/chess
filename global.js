@@ -6,6 +6,7 @@ for (let row = 0; row < 8; row++){
 		const isDark = (row+col) % 2 == 1;
 		tile.style.backgroundColor = isDark ? '#769656' : '#eeeed2';
 		tile.dataset.row = row; tile.dataset.col = col;
+		tile.classList.add("tile");
 		board.appendChild(tile);
 	}
 }
@@ -42,6 +43,7 @@ function renderBitboard(bitBoard, imageSrc){
 				let piece = document.createElement('img');
 				piece.src = imageSrc;
 				piece.classList.add("chess-piece");
+				piece.setAttribute("draggable",false);
 				tile.appendChild(piece);
 			}
 		}
@@ -65,3 +67,53 @@ renderBitboard(bitBoards.black.queen,"assets/sprites/black-queen.svg");
 
 renderBitboard(bitBoards.white.king,"assets/sprites/white-king.svg");
 renderBitboard(bitBoards.black.king,"assets/sprites/black-king.svg");
+
+
+// Mouse movement
+
+function onMouseDown(e){
+	const target = e.target;
+
+	if (target.classList.contains('chess-piece')){
+		startDragging(target,e);
+	}
+}
+
+function startDragging(piece,e){
+	piece.style.position = 'fixed';
+	piece.style.zIndex = 1000;
+
+	const rect = piece.getBoundingClientRect();
+	const offsetX = e.clientX - rect.left;
+	const offsetY = e.clientY - rect.top;
+	
+	function onMouseMove(e){
+		piece.style.left = (e.clientX - offsetX) + 'px';
+		piece.style.top = (e.clientY - offsetY) + 'px';
+	}
+	
+	console.log("Offsetx: ",offsetX, " OffsetY: ", offsetY);
+	
+	function onMouseUp(e){
+		const tile = document.elementFromPoint(e.clientX,e.clientY);
+
+		if (tile && tile.classList.contains('tile')){
+			dropPiece(piece,tile);
+		}
+
+		document.removeEventListener("mousemove",onMouseMove);
+		document.removeEventListener("mouseup",onMouseUp);
+	}
+
+	document.addEventListener('mousemove',onMouseMove);
+	document.addEventListener('mouseup',onMouseUp);
+}
+
+
+function dropPiece(piece,tile){
+	tile.appendChild(piece);
+	piece.style.position = "relative"
+	piece.style.left = ''; piece.style.top = '';
+}
+
+document.addEventListener("mousedown",onMouseDown);
