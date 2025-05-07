@@ -51,6 +51,8 @@ body {
 
 	position: relative;
 
+	transition: transform 0.2s ease;
+
 	cursor: grab;
 }
 
@@ -58,6 +60,9 @@ body {
 	cursor: grabbing;
 }
 
+.chess-piece:hover {
+	transform: scale(0.9);
+}
 
 #info {
 	width: 70vmin;
