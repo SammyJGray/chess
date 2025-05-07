@@ -1,4 +1,4 @@
-export function onPointerDown(e){
+export function onDown(e){
 	const target = e.target;
 
 	if (target.classList.contains('chess-piece')){
@@ -16,19 +16,31 @@ function startDragging(piece,e){
 
 	piece.style.position = 'fixed';
 	piece.style.zIndex = 1000;
+
+	const isTouch = e.type.startsWith('touch');
+	const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+	const clientY = isTouch ? e.touches[0].clientY : e.clientY;
 	
-	const offsetX = e.clientX - rect.left;
-	const offsetY = e.clientY - rect.top;
+	const offsetX = clientX - rect.left;
+	const offsetY = clientY - rect.top;
 	
-	function onPointerMove(e){
+	function onMove(e){
 		e.preventDefault();
-		piece.style.left = (e.clientX - offsetX) + 'px';
-		piece.style.top = (e.clientY - offsetY) + 'px';
+
+		const moveX = isTouch ? e.touches[0].clientX : e.clientX;
+		const moveY = isTouch ? e.touches[0].clientY : e.clientY;
+
+		piece.style.left = (moveX - offsetX) + 'px';
+		piece.style.top = (moveY - offsetY) + 'px';
 	}
 		
-	function onPointerUp(e){
+	function onUp(e){
 		piece.style.display = 'none';
-		const tile = document.elementFromPoint(e.clientX,e.clientY);
+		
+		const finalX = isTouch ? e.touches[0].clientX : e.clientX;
+		const finalY = isTouch ? e.touches[0].clientY : e.clientY;
+		
+		const tile = document.elementFromPoint(finalX,finalY);
 		piece.style.display = '';
 
 		if (tile && tile.classList.contains('tile')){
@@ -38,12 +50,24 @@ function startDragging(piece,e){
 			dropPiece(piece,originalTile);
 		}
 
-		document.removeEventListener("pointermove",onPointerMove);
-		document.removeEventListener("pointerup",onPointerUp);
+		if (isTouch){
+			document.removeEventListener("touchmove",onMove);
+			document.removeEventListener("touchup",onUp);
+		}
+		else {
+			document.removeEventListener("pointermove",onMove);
+			document.removeEventListener("pointerup",onUp);
+		}
 	}
 
-	document.addEventListener('pointermove',onPointerMove,{passive:false});
-	document.addEventListener('pointerup',onPointerUp);
+	if (isTouch){
+		document.addEventListener("touchmove",onMove,{passive:false});
+		document.addEventListener("touchup",onUp);
+	}
+	else {
+		document.addEventListener("pointermove",onMove,{passive:false});
+		document.addEventListener("pointerup",onUp);
+	}
 }
 
 
