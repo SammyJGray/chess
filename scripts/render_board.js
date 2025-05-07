@@ -55,7 +55,7 @@ export function renderBoard(){
 
 	pieceType.forEach(piece=>{
 		color.forEach(color=>{
-			renderBitboard(bitBoards[color][piece],`/assets/sprites/${color}-${piece}.svg`);
+			renderBitboard(bitBoards[color][piece],`assets/sprites/${color}-${piece}.svg`);
 		});
 	});
 
