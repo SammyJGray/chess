@@ -1,4 +1,4 @@
-export function onMouseDown(e){
+export function onPointerDown(e){
 	const target = e.target;
 
 	if (target.classList.contains('chess-piece')){
@@ -8,7 +8,9 @@ export function onMouseDown(e){
 
 function startDragging(piece,e){
 	const originalTile = piece.parentElement;
+
 	const rect = piece.getBoundingClientRect();
+
 	piece.style.width = rect.width + 'px';
 	piece.style.height = rect.height + 'px';
 
@@ -18,12 +20,12 @@ function startDragging(piece,e){
 	const offsetX = e.clientX - rect.left;
 	const offsetY = e.clientY - rect.top;
 	
-	function onMouseMove(e){
+	function onPointerMove(e){
 		piece.style.left = (e.clientX - offsetX) + 'px';
 		piece.style.top = (e.clientY - offsetY) + 'px';
 	}
 		
-	function onMouseUp(e){
+	function onPointerUp(e){
 		piece.style.display = 'none';
 		const tile = document.elementFromPoint(e.clientX,e.clientY);
 		piece.style.display = '';
@@ -35,12 +37,12 @@ function startDragging(piece,e){
 			dropPiece(piece,originalTile);
 		}
 
-		document.removeEventListener("mousemove",onMouseMove);
-		document.removeEventListener("mouseup",onMouseUp);
+		document.removeEventListener("pointermove",onPointerMove);
+		document.removeEventListener("pointerup",onPointerUp);
 	}
 
-	document.addEventListener('mousemove',onMouseMove);
-	document.addEventListener('mouseup',onMouseUp);
+	document.addEventListener('pointermove',onPointerMove);
+	document.addEventListener('pointerup',onPointerUp);
 }
 
 
