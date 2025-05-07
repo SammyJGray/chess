@@ -21,6 +21,7 @@ function startDragging(piece,e){
 	const offsetY = e.clientY - rect.top;
 	
 	function onPointerMove(e){
+		e.preventDefault();
 		piece.style.left = (e.clientX - offsetX) + 'px';
 		piece.style.top = (e.clientY - offsetY) + 'px';
 	}
@@ -41,7 +42,7 @@ function startDragging(piece,e){
 		document.removeEventListener("pointerup",onPointerUp);
 	}
 
-	document.addEventListener('pointermove',onPointerMove);
+	document.addEventListener('pointermove',onPointerMove,{passive:false});
 	document.addEventListener('pointerup',onPointerUp);
 }
 
