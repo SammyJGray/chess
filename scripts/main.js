@@ -1,7 +1,8 @@
-import {renderBoard} from "./render_board.js";
+import {initBoard} from "./init_board.js";
 import {onDown} from "./move_piece.js";
+import bitboard from "./bitboard.js";
 
-renderBoard();
+initBoard();
 
 document.addEventListener("pointerdown",onDown);
 document.addEventListener("touchdown",onDown);

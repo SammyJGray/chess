@@ -1,4 +1,4 @@
-body {
+html,body {
 	background-image: url('images/background.jpg');
 	background-size: cover;
 
@@ -48,6 +48,8 @@ body {
 	object-fit: contain;
 
 	user-select: none;
+	
+	touch-action:none;
 
 	position: relative;
 

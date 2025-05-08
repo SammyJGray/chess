@@ -1,6 +1,8 @@
+import bitboard from "./bitboard.js";
+
 export function onDown(e){
 	const target = e.target;
-
+	e.preventDefault();
 	if (target.classList.contains('chess-piece')){
 		startDragging(target,e);
 	}
@@ -9,6 +11,8 @@ export function onDown(e){
 function startDragging(piece,e){
 	const originalTile = piece.parentElement;
 
+	bitboard.removePiece(BigInt(originalTile.dataset.pos),piece.dataset.color,piece.dataset.piece)
+
 	const rect = piece.getBoundingClientRect();
 
 	piece.style.width = rect.width + 'px';
@@ -16,64 +20,45 @@ function startDragging(piece,e){
 
 	piece.style.position = 'fixed';
 	piece.style.zIndex = 1000;
+	
+	const offsetX = e.clientX - rect.left;
+	const offsetY = e.clientY - rect.top;
 
-	const isTouch = e.type.startsWith('touch');
-	const clientX = isTouch ? e.touches[0].clientX : e.clientX;
-	const clientY = isTouch ? e.touches[0].clientY : e.clientY;
-	
-	const offsetX = clientX - rect.left;
-	const offsetY = clientY - rect.top;
-	
 	function onMove(e){
 		e.preventDefault();
 
-		const moveX = isTouch ? e.touches[0].clientX : e.clientX;
-		const moveY = isTouch ? e.touches[0].clientY : e.clientY;
-
-		piece.style.left = (moveX - offsetX) + 'px';
-		piece.style.top = (moveY - offsetY) + 'px';
+		piece.style.left = (e.clientX - offsetX) + 'px';
+		piece.style.top = (e.clientY - offsetY) + 'px';
 	}
 		
 	function onUp(e){
 		piece.style.display = 'none';
 		
-		const finalX = isTouch ? e.touches[0].clientX : e.clientX;
-		const finalY = isTouch ? e.touches[0].clientY : e.clientY;
-		
-		const tile = document.elementFromPoint(finalX,finalY);
+		const tile = document.elementFromPoint(e.clientX,e.clientY);
 		piece.style.display = '';
-
-		if (tile && tile.classList.contains('tile')){
+		
+		if (tile && tile.classList.contains('tile') && !bitboard.isOccupied(BigInt(tile.dataset.pos))){
 			dropPiece(piece,tile);
 		}
 		else {
 			dropPiece(piece,originalTile);
 		}
 
-		if (isTouch){
-			document.removeEventListener("touchmove",onMove);
-			document.removeEventListener("touchup",onUp);
-		}
-		else {
-			document.removeEventListener("pointermove",onMove);
-			document.removeEventListener("pointerup",onUp);
-		}
+		document.removeEventListener("pointermove",onMove);
+		document.removeEventListener("pointerup",onUp);
+		
 	}
 
-	if (isTouch){
-		document.addEventListener("touchmove",onMove,{passive:false});
-		document.addEventListener("touchup",onUp);
-	}
-	else {
-		document.addEventListener("pointermove",onMove,{passive:false});
-		document.addEventListener("pointerup",onUp);
-	}
+	document.addEventListener("pointermove",onMove,{passive:false});
+	document.addEventListener("pointerup",onUp);
 }
 
 
 function dropPiece(piece,tile){
+	bitboard.addPiece(BigInt(tile.dataset.pos),piece.dataset.color,piece.dataset.piece)
+
 	tile.appendChild(piece);
-	console.log("dropped");
+	
 	piece.style.position = "relative"
-	piece.style.left = ''; piece.style.top = ''; piece.style.width = ''; piece.style.height = '';
+	piece.style.left = ''; piece.style.top = ''; piece.style.width = ''; piece.style.height = ''; piece.style.zIndex = '';
 }
