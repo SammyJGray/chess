@@ -34,10 +34,11 @@ function startDragging(piece,e){
 	function onUp(e){
 		piece.style.display = 'none';
 		
-		const tile = document.elementFromPoint(e.clientX,e.clientY);
+		const element = document.elementFromPoint(e.clientX,e.clientY);
 		piece.style.display = '';
 		
-		if (tile && tile.classList.contains('tile') && !bitboard.isOccupied(BigInt(tile.dataset.pos))){
+		if (element && element.classList.contains('circle')){
+			const tile = element.parentElement;
 			dropPiece(piece,tile);
 		}
 		else {

@@ -66,6 +66,17 @@ html,body {
 	transform: scale(0.9);
 }
 
+.circle {
+	width: 70%;
+	height: 70%;
+
+	border-radius: 100%;
+	background-color: rgba(10,10,10,0.5);
+
+	position: absolute;
+	z-index: 900;
+}
+
 #info {
 	width: 70vmin;
 	height: 90vmin;
